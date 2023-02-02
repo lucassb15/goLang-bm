@@ -11,20 +11,21 @@ import (
 
 // TERMINAL
 func helloworld(name string) {
-	scanner := bufio.NewScanner(os.Stdin)
+	scanner := bufio.NewScanner(os.Stdin) // ler input
 	fmt.Printf("Escreva seu nome para abrir a web: ")
-	scanner.Scan()
+	scanner.Scan() // armazena input
 	nome := scanner.Text()
-	fmt.Printf("Hello, %q", nome)
+	fmt.Printf("Hello, %q", nome) // output
 }
 
 // WEB
-func index(w http.ResponseWriter, r *http.Request) {
-	template, err := template.ParseFiles("templates/index.html")
+func index(w http.ResponseWriter, r *http.Request) { // Solicitação ao servidor
+	template, err := template.ParseFiles("templates/index.html") // leitura do arquivo que foi passado
+
 	if err != nil {
 		fmt.Fprint(w, "Página não encontrada!")
 	} else {
-		template.Execute(w, "ADMIN")
+		template.Execute(w, "ADMIN") // executa
 	}
 }
 
@@ -33,5 +34,4 @@ func main() {
 	fmt.Printf("\n Server started on localhost:8000 ")
 	http.HandleFunc("/", index)
 	log.Fatal(http.ListenAndServe(":8000", nil))
-
 }
