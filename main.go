@@ -25,13 +25,13 @@ func index(w http.ResponseWriter, r *http.Request) { // Solicitação ao servido
 	if err != nil {
 		fmt.Fprint(w, "Página não encontrada!")
 	} else {
-		template.Execute(w, "ADMIN") // executa
+		template.Execute(w, "ADMIN") // executa e passa para o html o texto "admin"
 	}
 }
 
 func main() {
-	helloworld("")
-	fmt.Printf("\n Server started on localhost:8000 ")
+	helloworld("")                                     // chamando a função
+	fmt.Printf("\n Server started on localhost:8000 ") // apenas uma msg que o servidor foi iniciado
 	http.HandleFunc("/", index)
 	log.Fatal(http.ListenAndServe(":8000", nil))
 }
