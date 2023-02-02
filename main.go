@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"html/template"
 	"log"
@@ -9,29 +8,59 @@ import (
 	"os"
 )
 
-// TERMINAL
-func helloworld(name string) {
-	scanner := bufio.NewScanner(os.Stdin) // ler input
-	fmt.Printf("Escreva seu nome para abrir a web: ")
-	scanner.Scan() // armazena input
-	nome := scanner.Text()
-	fmt.Printf("Hello, %q", nome) // output
+type usuario struct {
+	Titulo    string
+	Nome      string
+	Sobrenome string
+	Email     string
+	Idade     int
+	Success   bool
 }
 
-// WEB
-func index(w http.ResponseWriter, r *http.Request) { // Solicitação ao servidor
-	template, err := template.ParseFiles("templates/index.html") // leitura do arquivo que foi passado
+var tpl *template.Template
+var user1 usuario
 
-	if err != nil {
-		fmt.Fprint(w, "Página não encontrada!")
-	} else {
-		template.Execute(w, "ADMIN") // executa e passa para o html o texto "admin"
+func usuarioText() {
+	user1 = usuario{
+		Titulo:    "Usuário 1",
+		Nome:      "Lucas",
+		Sobrenome: "Barbosa",
+		Idade:     22,
+		Email:     "lucas@exemplo.com",
+		Success:   false,
 	}
 }
 
 func main() {
-	helloworld("")                                     // chamando a função
-	fmt.Printf("\n Server started on localhost:8000 ") // apenas uma msg que o servidor foi iniciado
+	usuarioText()
+	port := os.Getenv("PORT_WEB")
+	fmt.Println("Server started on localhost: ", port)
+	tpl, _ = tpl.ParseGlob("templates/*.html")
 	http.HandleFunc("/", index)
-	log.Fatal(http.ListenAndServe(":8000", nil))
+	http.HandleFunc("/form", form)
+	log.Fatal(http.ListenAndServe(port, nil))
+}
+
+// WEB
+func index(w http.ResponseWriter, r *http.Request) { // Solicitação ao servidor
+	tpl.ExecuteTemplate(w, "index.html", user1)
+}
+
+func form(w http.ResponseWriter, r *http.Request) {
+
+	switch r.Method {
+	case "GET":
+		http.ServeFile(w, r, "templates/form.html")
+	case "POST":
+		fmt.Fprint(w, "Post: \n", r.PostForm)
+		Nome := r.FormValue("nome")
+		Email := r.FormValue("email")
+
+		fmt.Fprintf(w, "Nome: %s\n", Nome)
+		fmt.Fprintf(w, "Email: %s\n", Email)
+
+	default:
+		fmt.Fprintf(w, "Pega apenas o post")
+	}
+
 }
