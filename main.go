@@ -17,6 +17,10 @@ type usuario struct {
 	Success   bool
 }
 
+func (me *usuario) calculaIdade() { // calcular idade usando info do usuario
+
+}
+
 var tpl *template.Template
 var user1 usuario
 
@@ -39,6 +43,7 @@ func main() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/form", form)
 	log.Fatal(http.ListenAndServe(port, nil))
+
 }
 
 // INDEX
