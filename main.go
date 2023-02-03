@@ -33,7 +33,7 @@ func usuarioText() {
 
 func main() {
 	usuarioText()
-	port := os.Getenv("PORT_WEB")
+	port := os.Getenv("PORT_WEB") // env port
 	fmt.Println("Server started on localhost: ", port)
 	tpl, _ = tpl.ParseGlob("templates/*.html")
 	http.HandleFunc("/", index)
@@ -41,27 +41,26 @@ func main() {
 	log.Fatal(http.ListenAndServe(port, nil))
 }
 
-// WEB
+// INDEX
 func index(w http.ResponseWriter, r *http.Request) { // Solicitação ao servidor
 
 	tpl.ExecuteTemplate(w, "index.html", user1)
 }
 
+// FORM
 func form(w http.ResponseWriter, r *http.Request) {
 
-	switch r.Method {
-	case "GET":
-		http.ServeFile(w, r, "templates/form.html")
-	case "POST":
-		fmt.Fprint(w, "Post: \n", r.PostForm)
-		Nome := r.FormValue("nome")
-		Email := r.FormValue("email")
-
-		fmt.Fprintf(w, "Nome: %s\n", Nome)
-		fmt.Fprintf(w, "Email: %s\n", Email)
-
-	default:
-		fmt.Fprintf(w, "Pega apenas o post")
+	if r.Method != http.MethodPost {
+		tpl.Execute(w, nil)
+		return
 	}
+	userform := usuario{
+		Nome:  r.FormValue("nome"),
+		Email: r.FormValue("email"),
+	}
+	tpl.Execute(w, struct {
+		Success  bool
+		Userform usuario
+	}{true, userform})
 
 }

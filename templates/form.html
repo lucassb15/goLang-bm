@@ -1,15 +1,21 @@
 <html>
-    <header>
+    <head>
         <body>
+            {{if .Success}}
+                <h1>Informações do usuário: </h1>
+                <b>Nome: </b>{{.Userform.Nome}} <br><br>
+                <b>Email: </b>{{.Userform.Email}} 
+                {{else}}
             <div>
                 <form method="POST" action="/form">
                     <label for="">Nome</label>
-                    <input type="text" name="nome" value=""><br><br>
+                    <input type="text" name="nome" autocomplete="off"><br><br>
                     <label for="">Email</label>
-                    <input type="text" name="email" value=""><br><br>
+                    <input type="text" name="email" autocomplete="off"><br><br>
                     <input type="submit" value="submit">
                 </form>
             </div>
+            {{end}}
         </body>
-    </header>
+    </head>
 </html>
