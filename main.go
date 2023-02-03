@@ -43,6 +43,7 @@ func main() {
 
 // WEB
 func index(w http.ResponseWriter, r *http.Request) { // Solicitação ao servidor
+
 	tpl.ExecuteTemplate(w, "index.html", user1)
 }
 
