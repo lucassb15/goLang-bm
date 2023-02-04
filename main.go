@@ -17,9 +17,9 @@ type usuario struct {
 	Success   bool
 }
 
-func (me *usuario) calculaIdade() { // calcular idade usando info do usuario
+// func (me *usuario) calculaIdade() { // calcular idade usando info do usuario
 
-}
+// }
 
 var tpl *template.Template
 var user1 usuario
