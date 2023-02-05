@@ -1,3 +1,3 @@
-module github.com/lucassb15/GoLang-Course
+module modulo
 
 go 1.19
