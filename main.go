@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 	"os"
 )
@@ -17,44 +16,24 @@ type usuario struct {
 	Success   bool
 }
 
-// func (me *usuario) calculaIdade() { // calcular idade usando info do usuario
-
-// }
-
-var tpl *template.Template
-var user1 usuario
-
-func usuarioText() {
-	user1 = usuario{
-		Titulo:    "Usuário 1",
-		Nome:      "Lucas",
-		Sobrenome: "Barbosa",
-		Idade:     22,
-		Email:     "lucas@exemplo.com",
-		Success:   false,
-	}
-}
+var tpl *template.Template // ponteiro do pacote
 
 func main() {
-	usuarioText()
-	port := os.Getenv("PORT_WEB") // env port
-	fmt.Println("Server started on localhost: ", port)
-	tpl, _ = tpl.ParseGlob("templates/*.html")
-	http.HandleFunc("/", index)
-	http.HandleFunc("/form", form)
-	log.Fatal(http.ListenAndServe(port, nil))
+	port := os.Getenv("PORT_WEB")                      // env port
+	fmt.Println("Server started on localhost: ", port) // msg
+	tpl = template.Must(tpl.ParseGlob("src/templates/*.html"))
 
+	http.HandleFunc("/", Index)
+	http.HandleFunc("/form", Form)
 }
 
 // INDEX
-func index(w http.ResponseWriter, r *http.Request) { // Solicitação ao servidor
-
-	tpl.ExecuteTemplate(w, "index.html", user1)
+func Index(w http.ResponseWriter, r *http.Request) { // Solicitação ao servidor
+	tpl.ExecuteTemplate(w, "index.html", nil)
 }
 
 // FORM
-func form(w http.ResponseWriter, r *http.Request) {
-
+func Form(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		tpl.Execute(w, nil)
 		return
